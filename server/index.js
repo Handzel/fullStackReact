@@ -3,7 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 // only 'require' without const declaration i.e passportConfig
 // because /services/passport.js does not return anything
-require('./services/passport')
+require('./models/User'); //this before passport to load model before passport does
+require('./services/passport');
+
 const keys = require('./config/keys');
 
 
