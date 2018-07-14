@@ -12,8 +12,18 @@ passport.use(new GoogleStrategy(
         callbackURL: '/auth/google/callback'
     }, 
     (accessToken, refreshToken, profile, done) => {
-        new User({
-            googleId: profile.id
-        }).save();
+        User.findOne({ googleId: profile.id})
+            .then((existingUser) => {
+                if (existingUser) {
+                    // user already exists
+                    done(null, existingUser);
+                } else {
+                    new User({
+                        googleId: profile.id
+                    })
+                    .save()
+                    .then(user => done(null, user));
+                }
+            });
     }
 ));
