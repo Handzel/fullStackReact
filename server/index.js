@@ -1,6 +1,8 @@
 // CommonJS
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
 // only 'require' without const declaration i.e passportConfig
 // because /services/passport.js does not return anything
 require('./models/User'); //this before passport to load model before passport does
@@ -14,6 +16,16 @@ const keys = require('./config/keys');
 mongoose.connect(keys.mongoURI);
 
 const app = express();
+
+app.use(
+    cookieSession({
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        keys: [keys.cookieKey]
+    })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 //authRoutes(app);
 require('./routes/auth')(app);
