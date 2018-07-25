@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
+const bodyParser = require('body-parser');
 const passport = require('passport');
 // only 'require' without const declaration i.e passportConfig
 // because /services/passport.js does not return anything
@@ -16,6 +17,8 @@ mongoose.connect(keys.mongoURI);
 
 const app = express();
 
+app.use(bodyParser.json());
+
 app.use(
     cookieSession({
         maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -28,6 +31,7 @@ app.use(passport.session());
 
 //authRoutes(app);
 require('./routes/auth')(app);
+require('./routes/billing')(app);
 
 const port = process.env.PORT || 5004;
 app.listen(port, () => console.log(`Server started on ${port}`));
